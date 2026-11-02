@@ -26,11 +26,12 @@
 fetch("link.json?t=" + Date.now(), { cache: "no-store" })
   .then(function (r) { return r.json(); })
   .then(function (j) {
-    if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com\/?$/.test(j.url || "")) throw new Error("no link");
+    // a quick tunnel, or her Mac on her own tailnet (Kay, 2026-10-28: Tailscale mode, her devices only)
+    if (!/^https:\/\/([a-z0-9-]+\.trycloudflare\.com|[a-z0-9-]+\.[a-z0-9-]+\.ts\.net)\/?$/.test(j.url || "")) throw new Error("no link");
     var a = document.createElement("a");
     a.href = j.url; a.textContent = "open it here";
     var alt = document.getElementById("alt");
-    alt.append("If nothing happens, ", a, ".");
+    alt.append("If nothing happens, ", a, /\.ts\.net\/?$/.test(j.url) ? " (only on a device signed in to your Tailscale)." : ".");
     location.replace(j.url);
   })
   .catch(function () {
